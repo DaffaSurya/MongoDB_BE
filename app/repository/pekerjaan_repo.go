@@ -43,7 +43,6 @@ func (r *PekerjaanRepository) Create(ctx context.Context, p *model.Pekerjaan) er
 	return err
 }
 
-// Get all pekerjaan by alumni ID
 func (r *PekerjaanRepository) FindByAlumniID(ctx context.Context, alumniID primitive.ObjectID) ([]model.Pekerjaan, error) {
 	var results []model.Pekerjaan
 	cursor, err := r.Col.Find(ctx, bson.M{"alumni_id": alumniID})
@@ -54,12 +53,27 @@ func (r *PekerjaanRepository) FindByAlumniID(ctx context.Context, alumniID primi
 
 	for cursor.Next(ctx) {
 		var p model.Pekerjaan
-		if err := cursor.Decode(&p); err == nil {
-			results = append(results, p)
+		if err := cursor.Decode(&p); err != nil {
+			return nil, err
 		}
+		results = append(results, p)
 	}
-	return results, nil
+	return results, cursor.Err()
 }
+
+
+// Get Pekerjaan By ID
+func (r *PekerjaanRepository) FindByID(ctx context.Context, id primitive.ObjectID) (*model.Pekerjaan, error) {
+	var pekerjaan model.Pekerjaan
+
+	err := r.Col.FindOne(ctx, bson.M{"_id": id}).Decode(&pekerjaan)
+	if err != nil {
+		return nil, err
+	}
+
+	return &pekerjaan, nil
+}
+
 
 // Update pekerjaan
 func (r *PekerjaanRepository) Update(ctx context.Context, id primitive.ObjectID, update bson.M) error {

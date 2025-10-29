@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"Mango/app/repository"
 	"Mango/app/service"
 	"Mango/middleware"
 
@@ -33,11 +34,21 @@ func PekerjaanRoutes(r *gin.RouterGroup, pekerjaanService *service.PekerjaanServ
 	{
 		// 🔹 Semua user bisa melihat pekerjaan
 		pekerjaan.GET("/", pekerjaanService.GetAllPekerjaan)
-		pekerjaan.GET("/alumni_id", pekerjaanService.GetPekerjaanByAlumni)
+		pekerjaan.GET("/me", pekerjaanService.GetPekerjaanByAlumni) // 🔹 route yang kamu maksud
+	
+		pekerjaan.GET("/:id", pekerjaanService.GetPekerjaanByID) // 
 
 		// 🔹 Hanya admin yang boleh create, update, dan delete pekerjaan
 		pekerjaan.POST("/", middleware.RoleMiddleware("admin"), pekerjaanService.CreatePekerjaan)
 		pekerjaan.PUT("/:id", middleware.RoleMiddleware("admin"), pekerjaanService.UpdatePekerjaan)
 		pekerjaan.DELETE("/:id", middleware.RoleMiddleware("admin"), pekerjaanService.DeletePekerjaan)
+	}
+}
+
+func FileRoutes(r *gin.RouterGroup, Fileservice *service.FileService, userRepo *repository.UserRepository) {
+	File := r.Group("/Unggah")
+	{
+		File.POST("/photo", middleware.AuthMiddleware(userRepo), Fileservice.UploadPhoto)
+		File.POST("/certificate", middleware.AuthMiddleware(userRepo), Fileservice.UploadCertificate)
 	}
 }

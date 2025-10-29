@@ -10,6 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type PekerjaanService struct {
@@ -71,21 +72,61 @@ func (s *PekerjaanService) GetAllPekerjaan(c *gin.Context) {
 	c.JSON(http.StatusOK, results)
 }
 
-
-// ✅ Get semua pekerjaan milik alumni yang login
 func (s *PekerjaanService) GetPekerjaanByAlumni(c *gin.Context) {
-	alumniID := c.MustGet("alumni_id").(primitive.ObjectID)
+	// Ambil user dari context yang diset di middleware
+	userVal, exists := c.Get("user")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "User not found in context"})
+		return
+	}
+
+	user := userVal.(*model.User)
+
+	// Konversi user.ID ke alumniID jika diperlukan
+	alumniID := user.ID
+
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
 	results, err := s.Repo.FindByAlumniID(ctx, alumniID)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to fetch pekerjaan"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch pekerjaan"})
 		return
 	}
 
-	c.JSON(http.StatusOK, results)
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Data pekerjaan berhasil diambil",
+		"data":    results,
+	})
 }
+
+
+func (s *PekerjaanService) GetPekerjaanByID(c *gin.Context) {
+	idParam := c.Param("id")
+
+	// Convert ID dari string ke ObjectID MongoDB
+	objID, err := primitive.ObjectIDFromHex(idParam)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID format"})
+		return
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	pekerjaan, err := s.Repo.FindByID(ctx, objID)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Pekerjaan not found"})
+			return
+		}
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch pekerjaan"})
+		return
+	}
+
+	c.JSON(http.StatusOK, pekerjaan)
+}
+
 
 // ✅ Update pekerjaan tertentu
 func (s *PekerjaanService) UpdatePekerjaan(c *gin.Context) {

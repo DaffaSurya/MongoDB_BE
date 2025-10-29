@@ -1,5 +1,4 @@
-package middleware 
-
+package middleware
 import (
 	model "Mango/app/Model"
 	"Mango/app/repository"
