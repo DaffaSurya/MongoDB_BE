@@ -21,6 +21,16 @@ func NewAuthService(repo *repository.UserRepository) *AuthService {
 	return &AuthService{repo: repo}
 }
 
+// Register godoc
+// @Summary Register a new user
+// @Description Create a new user account
+// @Tags Auth
+// @Accept  json
+// @Produce  json
+// @Param   user body model.User true "User data"
+// @Success 200 {object} map[string]interface{}
+// @Failure 400 {object} map[string]interface{}
+// @Router /auth/register [post]
 func (s *AuthService) Register(c *gin.Context) {
 	var input model.User
 
@@ -61,6 +71,17 @@ func (s *AuthService) Register(c *gin.Context) {
 	})
 }
 
+
+// Login godoc
+// @Summary Login user
+// @Description Authenticate user and return JWT token
+// @Tags Auth
+// @Accept  json
+// @Produce  json
+// @Param   credentials body map[string]string true "Login credentials"
+// @Success 200 {object} map[string]interface{}
+// @Failure 401 {object} map[string]interface{}
+// @Router /auth/login [post]
 func (s *AuthService) Login(c *gin.Context) {
 	var input struct {
 		Username string `json:"username"`

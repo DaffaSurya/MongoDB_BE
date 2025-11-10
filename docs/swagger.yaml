@@ -1,0 +1,514 @@
+basePath: /api/v1
+definitions:
+  model.Alumni:
+    properties:
+      Update_at:
+        type: integer
+      alamat:
+        type: string
+      angkatan:
+        type: integer
+      created_at:
+        type: integer
+      email:
+        type: string
+      id:
+        type: string
+      jurusan:
+        type: string
+      nama:
+        type: string
+      nim:
+        type: string
+      no_telp:
+        type: string
+      tahun_lulus:
+        type: integer
+    type: object
+  model.Pekerjaan:
+    properties:
+      Updated_at:
+        type: integer
+      alumni_id:
+        type: string
+      bidang_industri:
+        type: string
+      created_at:
+        type: integer
+      deskripsi:
+        type: string
+      gaji_range:
+        type: string
+      id:
+        type: string
+      lokasi_kerja:
+        type: string
+      nama_perusahaan:
+        type: string
+      posisi_jabatan:
+        type: string
+      status:
+        type: string
+      tanggal_Kerja:
+        type: integer
+      tanggal_selesai:
+        type: integer
+    type: object
+  model.User:
+    properties:
+      alumni_id:
+        type: string
+      created_at:
+        type: string
+      email:
+        type: string
+      id:
+        type: string
+      password:
+        type: string
+      role:
+        type: string
+      username:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: daffa@example.com
+    name: Daffa Surya
+    url: https://github.com/daffasurya
+  description: API untuk manajemen data alumni menggunakan MongoDB dan Gin
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  termsOfService: http://swagger.io/terms/
+  title: Mango API Documentation
+  version: "1.0"
+paths:
+  /alumni:
+    post:
+      consumes:
+      - application/json
+      description: Menambahkan data alumni baru ke database
+      parameters:
+      - description: Data Alumni
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/model.Alumni'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.Alumni'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create new alumni
+      tags:
+      - Alumni
+  /alumni/{id}:
+    get:
+      description: Mengambil data alumni berdasarkan ID
+      parameters:
+      - description: Alumni ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Alumni'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get alumni by ID
+      tags:
+      - Alumni
+    put:
+      consumes:
+      - application/json
+      description: Memperbarui data alumni berdasarkan ID
+      parameters:
+      - description: Alumni ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Data Alumni
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/model.Alumni'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Alumni'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Update alumni
+      tags:
+      - Alumni
+  /api/Pekerjaan/{id}:
+    delete:
+      description: Menghapus data Pekerjaan berdasarkan ID
+      parameters:
+      - description: Pekerjaan ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Delete Pekerjaan
+      tags:
+      - Pekerjaan
+    put:
+      consumes:
+      - application/json
+      description: Memperbarui data pekerjaan berdasarkan ID
+      parameters:
+      - description: Pekerjaan ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Data Pekerjaan
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/model.Pekerjaan'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Pekerjaan'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Update pekerjaan
+      tags:
+      - Pekerjaan
+  /api/pekerjaan:
+    get:
+      description: Mengambil semua data pekerjaan dari database table pekerjaan alumni
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Pekerjaan'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get all pekerjaan
+      tags:
+      - Pekerjaan
+    post:
+      consumes:
+      - application/json
+      description: Menambahkan data pekerjaan  baru ke database table pekerjaan alumni
+      parameters:
+      - description: Data Pekerjaan
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/model.Pekerjaan'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.Pekerjaan'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create new Pekerjaan
+      tags:
+      - Pekerjaan
+  /api/pekerjaan/{alumni_id}:
+    get:
+      description: Mengambil data Pekerjaan berdasarkan alumni
+      parameters:
+      - description: pekerjaan alumni
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Pekerjaan'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get Pekerjan by alumni
+      tags:
+      - pekerjaan
+  /api/pekerjaan/{id}:
+    get:
+      description: Mengambil data Pekerjaan berdasarkan ID
+      parameters:
+      - description: pekerjaan ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Pekerjaan'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get Pekerjan by ID
+      tags:
+      - pekerjaan
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate user and return JWT token
+      parameters:
+      - description: Login credentials
+        in: body
+        name: credentials
+        required: true
+        schema:
+          additionalProperties:
+            type: string
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Login user
+      tags:
+      - Auth
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      description: Create a new user account
+      parameters:
+      - description: User data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/model.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Register a new user
+      tags:
+      - Auth
+  /uploads/certificate:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Upload a certificate file (PDF only, max 2MB)
+      parameters:
+      - description: Certificate file
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Upload user certificate
+      tags:
+      - Uploads
+  /uploads/photo:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Upload a profile photo (JPG, JPEG, PNG only, max 1MB)
+      parameters:
+      - description: Photo file
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Upload user photo
+      tags:
+      - Uploads
+swagger: "2.0"

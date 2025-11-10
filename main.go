@@ -1,3 +1,17 @@
+// @title Mango API Documentation
+// @version 1.0
+// @description API untuk manajemen data alumni menggunakan MongoDB dan Gin
+// @termsOfService http://swagger.io/terms/
+
+// @contact.name Daffa Surya
+// @contact.url https://github.com/daffasurya
+// @contact.email daffa@example.com
+
+// @license.name MIT
+// @license.url https://opensource.org/licenses/MIT
+
+// @host localhost:8080
+// @BasePath /api/v1
 package main
 
 import (
@@ -11,8 +25,12 @@ import (
 	"os"
 	"time"
 
+	_ "Mango/docs"
+
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -67,6 +85,13 @@ func main() {
 	router.Use(gin.Logger(), gin.Recovery())
 
 	// =============================
+	// 🔹 EndPoint Swagger
+	// =============================
+
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	fmt.Println("📘 Swagger UI available at: http://localhost:" + port + "/swagger/index.html")
+
+	// =============================
 	// 🔹 ROUTING SECTION
 	// =============================
 
@@ -85,7 +110,7 @@ func main() {
 
 	}
 
-	// buat router untuk fitur uploads 
+	// buat router untuk fitur uploads
 	auth := router.Group("/uploads")
 	auth.Use(middleware.AuthMiddleware(userRepo))
 	{
@@ -98,4 +123,5 @@ func main() {
 	}
 	fmt.Printf("🚀 Server running on port %s\n", port)
 	router.Run(":" + port)
+
 }

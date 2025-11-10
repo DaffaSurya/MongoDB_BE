@@ -21,7 +21,17 @@ func NewPekerjaanService(repo *repository.PekerjaanRepository) *PekerjaanService
 	return &PekerjaanService{Repo: repo}
 }
 
-// ✅ Create pekerjaan baru
+
+// @Summary Create new Pekerjaan
+// @Description Menambahkan data pekerjaan  baru ke database table pekerjaan alumni
+// @Tags Pekerjaan
+// @Accept json
+// @Produce json
+// @Param data body model.Pekerjaan true "Data Pekerjaan"
+// @Success 201 {object} model.Pekerjaan
+// @Failure 400 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Router /api/pekerjaan [post]
 func (s *PekerjaanService) CreatePekerjaan(c *gin.Context) {
 	alumniID := c.MustGet("alumni_id").(primitive.ObjectID)
 
@@ -59,6 +69,13 @@ func (s *PekerjaanService) CreatePekerjaan(c *gin.Context) {
 	c.JSON(http.StatusCreated, pekerjaan)
 }
 
+// @Summary Get all pekerjaan
+// @Description Mengambil semua data pekerjaan dari database table pekerjaan alumni
+// @Tags Pekerjaan
+// @Produce json
+// @Success 200 {array} model.Pekerjaan
+// @Failure 500 {object} map[string]string
+// @Router /api/pekerjaan [get]
 func (s *PekerjaanService) GetAllPekerjaan(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
@@ -72,6 +89,18 @@ func (s *PekerjaanService) GetAllPekerjaan(c *gin.Context) {
 	c.JSON(http.StatusOK, results)
 }
 
+
+
+
+// @Summary Get Pekerjan by alumni
+// @Description Mengambil data Pekerjaan berdasarkan alumni
+// @Tags pekerjaan
+// @Produce json
+// @Param id path string true "pekerjaan alumni"
+// @Success 200 {object} model.Pekerjaan
+// @Failure 400 {object} map[string]string
+// @Failure 404 {object} map[string]string
+// @Router /api/pekerjaan/{alumni_id} [get]
 func (s *PekerjaanService) GetPekerjaanByAlumni(c *gin.Context) {
 	// Ambil user dari context yang diset di middleware
 	userVal, exists := c.Get("user")
@@ -101,6 +130,16 @@ func (s *PekerjaanService) GetPekerjaanByAlumni(c *gin.Context) {
 }
 
 
+
+// @Summary Get Pekerjan by ID
+// @Description Mengambil data Pekerjaan berdasarkan ID
+// @Tags pekerjaan
+// @Produce json
+// @Param id path string true "pekerjaan ID"
+// @Success 200 {object} model.Pekerjaan
+// @Failure 400 {object} map[string]string
+// @Failure 404 {object} map[string]string
+// @Router /api/pekerjaan/{id} [get]
 func (s *PekerjaanService) GetPekerjaanByID(c *gin.Context) {
 	idParam := c.Param("id")
 
@@ -128,7 +167,17 @@ func (s *PekerjaanService) GetPekerjaanByID(c *gin.Context) {
 }
 
 
-// ✅ Update pekerjaan tertentu
+// @Summary Update pekerjaan
+// @Description Memperbarui data pekerjaan berdasarkan ID
+// @Tags Pekerjaan
+// @Accept json
+// @Produce json
+// @Param id path string true "Pekerjaan ID"
+// @Param data body model.Pekerjaan true "Data Pekerjaan"
+// @Success 200 {object} model.Pekerjaan
+// @Failure 400 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Router /api/Pekerjaan/{id} [put]
 func (s *PekerjaanService) UpdatePekerjaan(c *gin.Context) {
 	idParam := c.Param("id")
 	objID, err := primitive.ObjectIDFromHex(idParam)
@@ -166,6 +215,15 @@ func (s *PekerjaanService) UpdatePekerjaan(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "pekerjaan updated"})
 }
 
+// @Summary Delete Pekerjaan
+// @Description Menghapus data Pekerjaan berdasarkan ID
+// @Tags Pekerjaan
+// @Produce json
+// @Param id path string true "Pekerjaan ID"
+// @Success 200 {object} map[string]string
+// @Failure 400 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Router /api/Pekerjaan/{id} [delete]
 // ✅ Delete pekerjaan
 func (s *PekerjaanService) DeletePekerjaan(c *gin.Context) {
 	idParam := c.Param("id")

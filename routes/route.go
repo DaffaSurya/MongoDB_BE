@@ -8,6 +8,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+//    r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
 func AuthRoutes(r *gin.RouterGroup, authService *service.AuthService) {
 	r.POST("/register", authService.Register)
 	r.POST("/login", authService.Login)

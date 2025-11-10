@@ -1,4 +1,5 @@
 package middleware
+
 import (
 	model "Mango/app/Model"
 	"Mango/app/repository"
@@ -65,7 +66,6 @@ func AuthMiddleware(userRepo *repository.UserRepository) gin.HandlerFunc {
 		if !user.AlumniID.IsZero() {
 			c.Set("alumni_id", user.AlumniID)
 		} else {
-			// Jika belum ada alumni_id, bisa gunakan ID user itu sendiri
 			c.Set("alumni_id", user.ID)
 		}
 

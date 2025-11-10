@@ -24,6 +24,19 @@ func NewFileservice(repo *repository.Filerepository) *FileService {
 }
 
 // ========================= UPLOAD FOTO =========================
+
+// @Summary Upload user photo
+// @Description Upload a profile photo (JPG, JPEG, PNG only, max 1MB)
+// @Tags Uploads
+// @Accept multipart/form-data
+// @Produce json
+// @Param file formData file true "Photo file"
+// @Success 200 {object} map[string]interface{}
+// @Failure 400 {object} map[string]interface{}
+// @Failure 401 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Security BearerAuth
+// @Router /uploads/photo [post]
 func (s *FileService) UploadPhoto(c *gin.Context) {
 	userVal, exists := c.Get("user")
 	if !exists {
@@ -97,6 +110,19 @@ func (s *FileService) UploadPhoto(c *gin.Context) {
 }
 
 // ========================= UPLOAD SERTIFIKAT =========================
+
+// @Summary Upload user certificate
+// @Description Upload a certificate file (PDF only, max 2MB)
+// @Tags Uploads
+// @Accept multipart/form-data
+// @Produce json
+// @Param file formData file true "Certificate file"
+// @Success 200 {object} map[string]interface{}
+// @Failure 400 {object} map[string]interface{}
+// @Failure 401 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Security BearerAuth
+// @Router /uploads/certificate [post]
 func (s *FileService) UploadCertificate(c *gin.Context) {
 
 	userVal, exists := c.Get("user")
@@ -150,7 +176,7 @@ func (s *FileService) UploadCertificate(c *gin.Context) {
 	c.SaveUploadedFile(file, filePath)
 
 	objID, _ := primitive.ObjectIDFromHex(targetUserID)
-	upload := model.Files{
+	upload := model.Files{ 
 		ID:          primitive.NewObjectID(),
 		UserID:      objID,
 		Type:        "certificate",
